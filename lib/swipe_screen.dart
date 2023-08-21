@@ -260,42 +260,48 @@ class _IndividualPersonState extends State<IndividualPerson> {
                       ),
                     ),
                   ),
-                  if(scrolledOffset.dx>size.width*0.125)
+                  if(scrolledOffset.dx>size.width*0.05)
                     Positioned(
-                      top: 50,
+                      top: 100,
                       left: 20,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: const Text(
-                          "Yes",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: Colors.blue,
-                            fontSize: 50,
+                      child: Transform.rotate(
+                        angle: angleToRadian(-90),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: const Text(
+                            "Yes",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.blue,
+                              fontSize: 50,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  if(scrolledOffset.dx<size.width*0.125)
+                  if(scrolledOffset.dx<-size.width*0.05)
                     Positioned(
-                      top: 50,
+                      top: 100,
                       right: 20,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: const Text(
-                          "No",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: Colors.red,
-                            fontSize: 50,
+                      child: Transform.rotate(
+                        angle: angleToRadian(90),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: const Text(
+                            "No",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.red,
+                              fontSize: 50,
+                            ),
                           ),
                         ),
                       ),
