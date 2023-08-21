@@ -18,6 +18,7 @@ class SwipeScreen extends StatefulWidget {
 }
 
 class _SwipeScreenState extends State<SwipeScreen> {
+  var _personIndex = 0;
   final personsList = [
     Person(
       name: "Dakota",
@@ -31,15 +32,15 @@ class _SwipeScreenState extends State<SwipeScreen> {
       name: "Selena",
       images: [
         "salena1.jpeg",
-        "salena1.jpeg",
-        "salena1.jpg",
+        "salena2.jpeg",
+        "salena3.jpg",
       ],
     ),
     Person(
       name: "Arya",
       images: [
-        "arya1.jpg"
-            "arya1.jpeg"
+        "arya1.jpg",
+        "arya2.jpeg",
       ],
     ),
     Person(
@@ -58,49 +59,163 @@ class _SwipeScreenState extends State<SwipeScreen> {
       child: Scaffold(
         body: Column(
           children: [
-            const SizedBox(
-              height: 30,
+            Container(
+              height: 100,
               width: double.infinity,
-              child: Placeholder(),
+              color: Colors.green.withOpacity(0.5),
             ),
             Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 5,
-                  horizontal:10,
-                ),
-                child: const Stack(
-                  children: [
-                    Positioned.fill(
-                        child: SizedBox(
-                            //Todo: Add image
-                            )),
-                    Positioned(
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      child: SizedBox(
-                        //Todo: Add next image bar
+              child: _personIndex > personsList.length - 1
+                  ? const Center(
+                      child: Text(
+                        "No more girls found.\nTry again later.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
+                    )
+                  : IndividualPerson(
+                      nextPerson: () {
+                        _personIndex++;
+                        setState(() {});
+                      },
+                      person: personsList[_personIndex],
                     ),
-                    Positioned(
-                      bottom: 0,
-                      left: 0,
-                      child: SizedBox(
-                        //Todo: Add Name
-                      ),
-                    ),
-                  ],
+            ),
+            Container(
+              height: 100,
+              width: double.infinity,
+              color: Colors.red.withOpacity(0.5),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class IndividualPerson extends StatefulWidget {
+  final Person person;
+  final VoidCallback nextPerson;
+
+  const IndividualPerson({
+    super.key,
+    required this.person,
+    required this.nextPerson,
+  });
+
+  @override
+  State<IndividualPerson> createState() => _IndividualPersonState();
+}
+
+class _IndividualPersonState extends State<IndividualPerson> {
+  int selectedIndex = 0;
+  final PageController pageController = PageController();
+  late Size size;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    size = MediaQuery.of(context).size;
+  }
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Listener(
+      onPointerMove: (details) {
+        if (details.delta.dx > 0) {
+          print("Right${details.delta.dx}");
+        }
+        if (details.delta.dx < 0) {
+          print("Left${details.delta.dx}");
+        }
+      },
+      onPointerUp: (details) {
+        print("Cancel");
+      },
+      child: Container(
+        width: size.width,
+        margin: const EdgeInsets.all(10),
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Image.asset(
+                  "assets/${widget.person.images[selectedIndex]}",
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
-            const SizedBox(
-              height: 30,
-              width: double.infinity,
-              child: Placeholder(),
+            Positioned(
+              top: 15,
+              left: 20,
+              right: 20,
+              child: Row(
+                children: [
+                  for (int i = 0; i < widget.person.images.length; i++)
+                    Expanded(
+                      child: Container(
+                        margin: i == widget.person.images.length - 1
+                            ? null
+                            : const EdgeInsets.only(right: 10),
+                        height: 5,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color:
+                              selectedIndex == i ? Colors.white : Colors.grey,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            Positioned(
+              bottom: 50,
+              left: 10,
+              child: Text(
+                widget.person.name,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 50,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            Positioned.fill(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        if (selectedIndex == 0) return;
+                        selectedIndex--;
+                        setState(() {});
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        if (selectedIndex == widget.person.images.length - 1) {
+                          return;
+                        }
+                        selectedIndex++;
+                        setState(() {});
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
