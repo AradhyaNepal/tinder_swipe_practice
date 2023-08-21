@@ -92,8 +92,10 @@ class _SwipeScreenState extends State<SwipeScreen> {
 
 class IndividualPerson extends StatefulWidget {
   final Person? person;
+
   ///Null means its itself BackgroundWidget
   final Widget? backgroundWidget;
+
   ///Null if its backgroundWidget
   final VoidCallback? nextPerson;
 
@@ -145,7 +147,7 @@ class _IndividualPersonState extends State<IndividualPerson> {
       children: [
         Positioned.fill(
           child: IgnorePointer(
-            ignoring:true,
+            ignoring: true,
             child: widget.backgroundWidget ?? const SizedBox(),
           ),
         ),
@@ -158,101 +160,147 @@ class _IndividualPersonState extends State<IndividualPerson> {
               transform: Matrix4.identity()
                 ..rotateZ(angleToRadian(getAngle()))
                 ..translate(getXTranslate(), getYTranslate()),
-              child: Listener(
-                onPointerMove: (details) {
-                  scrolledOffset = Offset(
-                    scrolledOffset.dx + details.delta.dx,
-                    scrolledOffset.dy + details.delta.dy,
-                  );
-                  setState(() {});
-                },
-                onPointerUp: (details) {
-                  //Todo:Decide whether to move to next or cancel
-                  // widget.nextPerson?.call();
-                  scrolledOffset = Offset.zero;
-                  setState(() {});
-                },
-                child: Container(
-                  width: size.width,
-                  margin: const EdgeInsets.all(10),
-                  child: Stack(
-                    children: [
-                      Positioned.fill(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: Image.asset(
-                            "assets/${person.images[selectedIndex]}",
-                            fit: BoxFit.cover,
+              child: Stack(
+                children: [
+                  Listener(
+                    onPointerMove: (details) {
+                      scrolledOffset = Offset(
+                        scrolledOffset.dx + details.delta.dx,
+                        scrolledOffset.dy + details.delta.dy,
+                      );
+                      setState(() {});
+                    },
+                    onPointerUp: (details) {
+                      if (scrolledOffset.dx.abs() > size.width * 0.25) {
+                        widget.nextPerson?.call();
+                      } else {
+                        scrolledOffset = Offset.zero;
+                        setState(() {});
+                      }
+                    },
+                    child: Container(
+                      width: size.width,
+                      margin: const EdgeInsets.all(10),
+                      child: Stack(
+                        children: [
+                          Positioned.fill(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: Image.asset(
+                                "assets/${person.images[selectedIndex]}",
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 15,
-                        left: 20,
-                        right: 20,
-                        child: Row(
-                          children: [
-                            for (int i = 0; i < person.images.length; i++)
-                              Expanded(
-                                child: Container(
-                                  margin: i == person.images.length - 1
-                                      ? null
-                                      : const EdgeInsets.only(right: 10),
-                                  height: 5,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: selectedIndex == i
-                                        ? Colors.white
-                                        : Colors.grey,
-                                    borderRadius: BorderRadius.circular(10),
+                          Positioned(
+                            top: 15,
+                            left: 20,
+                            right: 20,
+                            child: Row(
+                              children: [
+                                for (int i = 0; i < person.images.length; i++)
+                                  Expanded(
+                                    child: Container(
+                                      margin: i == person.images.length - 1
+                                          ? null
+                                          : const EdgeInsets.only(right: 10),
+                                      height: 5,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        color: selectedIndex == i
+                                            ? Colors.white
+                                            : Colors.grey,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 50,
+                            left: 10,
+                            child: Text(
+                              person.name,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 50,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          Positioned.fill(
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (selectedIndex == 0) return;
+                                      selectedIndex--;
+                                      setState(() {});
+                                    },
                                   ),
                                 ),
-                              ),
-                          ],
-                        ),
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (selectedIndex ==
+                                          person.images.length - 1) {
+                                        return;
+                                      }
+                                      selectedIndex++;
+                                      setState(() {});
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                      Positioned(
-                        bottom: 50,
-                        left: 10,
-                        child: Text(
-                          person.name,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  if(scrolledOffset.dx>size.width*0.125)
+                    Positioned(
+                      top: 50,
+                      left: 20,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: const Text(
+                          "Yes",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            color: Colors.blue,
                             fontSize: 50,
-                            color: Colors.white,
                           ),
                         ),
                       ),
-                      Positioned.fill(
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () {
-                                  if (selectedIndex == 0) return;
-                                  selectedIndex--;
-                                  setState(() {});
-                                },
-                              ),
-                            ),
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () {
-                                  if (selectedIndex ==
-                                      person.images.length - 1) {
-                                    return;
-                                  }
-                                  selectedIndex++;
-                                  setState(() {});
-                                },
-                              ),
-                            ),
-                          ],
+                    ),
+                  if(scrolledOffset.dx<size.width*0.125)
+                    Positioned(
+                      top: 50,
+                      right: 20,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: const Text(
+                          "No",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            color: Colors.red,
+                            fontSize: 50,
+                          ),
                         ),
                       ),
-                    ],
-                  ),
-                ),
+                    ),
+                ],
               ),
             ),
           ),
@@ -277,6 +325,7 @@ class _IndividualPersonState extends State<IndividualPerson> {
   }
 
   final double pi = 3.141592653589793238;
+
   double angleToRadian(double angle) {
     return angle * pi / 180;
   }
