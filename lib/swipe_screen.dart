@@ -34,9 +34,9 @@ class _SwipeScreenState extends State<SwipeScreen> {
     Person(
       name: "Dakota",
       images: [
+        "dakota3.jpg",
         "dakota1.jpg",
         "dakota2.jpg",
-        "dakota3.jpg",
       ],
       age: 33,
     ),
@@ -67,7 +67,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
         body: Column(
           children: [
             Container(
-              height: 100,
+              height: 50,
               width: double.infinity,
               color: Colors.green.withOpacity(0.5),
             ),
@@ -86,7 +86,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
               ),
             ),
             Container(
-              height: 100,
+              height: 50,
               width: double.infinity,
               color: Colors.red.withOpacity(0.5),
             ),
@@ -122,6 +122,7 @@ class _IndividualPersonState extends State<IndividualPerson> {
   final PageController pageController = PageController();
   late Size size;
   Offset scrolledOffset = Offset.zero;
+
 
   @override
   void didChangeDependencies() {
@@ -170,7 +171,7 @@ class _IndividualPersonState extends State<IndividualPerson> {
               child: Stack(
                 children: [
                   Listener(
-                    onPointerMove: (details) {
+                    onPointerMove: (details){
                       scrolledOffset = Offset(
                         scrolledOffset.dx + details.delta.dx,
                         scrolledOffset.dy + details.delta.dy,
@@ -178,7 +179,7 @@ class _IndividualPersonState extends State<IndividualPerson> {
                       setState(() {});
                     },
                     onPointerUp: (details) {
-                      if (scrolledOffset.dx.abs() > size.width * 0.25) {
+                      if (scrolledOffset.dx.abs() > size.width * 0.2) {
                         widget.nextPerson?.call();
                       } else {
                         scrolledOffset = Offset.zero;
@@ -209,6 +210,22 @@ class _IndividualPersonState extends State<IndividualPerson> {
                                     ),
                                   ),
                                 ],
+                              ),
+                            ),
+                          ),
+                          Positioned.fill(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Colors.black.withOpacity(0.25),
+                                    Colors.transparent,
+                                    Colors.transparent,
+                                    Colors.black.withOpacity(0.25),
+                                  ]
+                                )
                               ),
                             ),
                           ),
@@ -288,8 +305,8 @@ class _IndividualPersonState extends State<IndividualPerson> {
                         angle: angleToRadian(45),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.35),
-                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.black.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(30),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: const Text(
@@ -311,8 +328,8 @@ class _IndividualPersonState extends State<IndividualPerson> {
                         angle: angleToRadian(-45),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.35),
-                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.black.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(30),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: const Text(
@@ -335,6 +352,8 @@ class _IndividualPersonState extends State<IndividualPerson> {
     );
   }
 
+
+
   double getAngle() {
     final angle = scrolledOffset.dx * 0.25;
     if (angle > 180) return 180;
@@ -347,7 +366,7 @@ class _IndividualPersonState extends State<IndividualPerson> {
   }
 
   double getYTranslate() {
-    return scrolledOffset.dy - scrolledOffset.dx.abs() * 2;
+    return scrolledOffset.dy - scrolledOffset.dx.abs();
   }
 
   final double pi = 3.141592653589793238;
