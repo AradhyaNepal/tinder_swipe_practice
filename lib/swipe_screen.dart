@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 class Person {
   String name;
+  int age;
   List<String> images;
 
   Person({
     required this.name,
     required this.images,
+    required this.age,
   });
 }
 
@@ -21,35 +23,40 @@ class _SwipeScreenState extends State<SwipeScreen> {
   var _personIndex = 0;
   final personsList = [
     Person(
+      age: 19,
+      name: "Arya",
+      images: [
+        "arya3.jpg",
+        "arya1.jpg",
+        "arya2.jpeg",
+      ],
+    ),
+    Person(
       name: "Dakota",
       images: [
         "dakota1.jpg",
         "dakota2.jpg",
         "dakota3.jpg",
       ],
+      age: 33,
+    ),
+    Person(
+      name: "Olivia",
+      images: [
+        "olivia2.jpg",
+        "olivia1.jpg",
+        "olivia3.jpeg",
+      ],
+      age: 20,
     ),
     Person(
       name: "Selena",
       images: [
-        "salena1.jpeg",
-        "salena2.jpeg",
+        "salena2.jpg",
+        "salena1.jpg",
         "salena3.jpg",
       ],
-    ),
-    Person(
-      name: "Arya",
-      images: [
-        "arya1.jpg",
-        "arya2.jpeg",
-      ],
-    ),
-    Person(
-      name: "Hermione",
-      images: [
-        "hermione1.jpeg",
-        "hermione2.jpeg",
-        "hermione3.jpg",
-      ],
+      age: 31,
     ),
   ];
 
@@ -64,9 +71,9 @@ class _SwipeScreenState extends State<SwipeScreen> {
               width: double.infinity,
               color: Colors.green.withOpacity(0.5),
             ),
-            //Todo: Next image hidden under the hook
             Expanded(
               child: IndividualPerson(
+                key: ValueKey(_personIndex),
                 backgroundWidget: IndividualPerson(
                   nextPerson: null,
                   person: personsList.elementAtOrNull(_personIndex + 1),
@@ -186,9 +193,22 @@ class _IndividualPersonState extends State<IndividualPerson> {
                           Positioned.fill(
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(15),
-                              child: Image.asset(
-                                "assets/${person.images[selectedIndex]}",
-                                fit: BoxFit.cover,
+                              child: Stack(
+                                children: [
+                                  const Positioned.fill(
+                                      child: Center(
+                                    child: CircularProgressIndicator(),
+                                  )),
+                                  Positioned.fill(
+                                    child: Container(
+                                      color: Colors.white,
+                                      child: Image.asset(
+                                        "assets/${person.images[selectedIndex]}",
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -221,7 +241,7 @@ class _IndividualPersonState extends State<IndividualPerson> {
                             bottom: 50,
                             left: 10,
                             child: Text(
-                              person.name,
+                              "${person.name} ${person.age}",
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 50,
@@ -260,15 +280,15 @@ class _IndividualPersonState extends State<IndividualPerson> {
                       ),
                     ),
                   ),
-                  if(scrolledOffset.dx>size.width*0.05)
+                  if (scrolledOffset.dx < -size.width * 0.05)
                     Positioned(
-                      top: 100,
-                      left: 20,
+                      top: 125,
+                      right: 50,
                       child: Transform.rotate(
-                        angle: angleToRadian(-90),
+                        angle: angleToRadian(45),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
+                            color: Colors.grey.withOpacity(0.8),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -277,30 +297,30 @@ class _IndividualPersonState extends State<IndividualPerson> {
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               color: Colors.blue,
-                              fontSize: 50,
+                              fontSize: 75,
                             ),
                           ),
                         ),
                       ),
                     ),
-                  if(scrolledOffset.dx<-size.width*0.05)
+                  if (scrolledOffset.dx > size.width * 0.05)
                     Positioned(
-                      top: 100,
-                      right: 20,
+                      top: 125,
+                      left: 50,
                       child: Transform.rotate(
-                        angle: angleToRadian(90),
+                        angle: angleToRadian(-45),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
+                            color: Colors.grey.withOpacity(0.8),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: const Text(
-                            "No",
+                            "Eww",
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               color: Colors.red,
-                              fontSize: 50,
+                              fontSize: 75,
                             ),
                           ),
                         ),
@@ -316,7 +336,7 @@ class _IndividualPersonState extends State<IndividualPerson> {
   }
 
   double getAngle() {
-    final angle = scrolledOffset.dx * 0.5;
+    final angle = scrolledOffset.dx * 0.25;
     if (angle > 180) return 180;
     if (angle < -180) return -180;
     return angle;
