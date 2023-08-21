@@ -288,12 +288,12 @@ class _IndividualPersonState extends State<IndividualPerson> {
                         angle: angleToRadian(45),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.grey.withOpacity(0.8),
+                            color: Colors.black.withOpacity(0.35),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: const Text(
-                            "Yes",
+                            "Lovely",
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               color: Colors.blue,
@@ -311,12 +311,12 @@ class _IndividualPersonState extends State<IndividualPerson> {
                         angle: angleToRadian(-45),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.grey.withOpacity(0.8),
+                            color: Colors.black.withOpacity(0.35),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: const Text(
-                            "Eww",
+                            "Nope",
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               color: Colors.red,
